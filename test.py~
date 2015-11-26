@@ -1,0 +1,11 @@
+# shows a user's playlists (need to be authenticated via oauth)
+
+import sys
+import os
+import spotipy
+import spotipy.util as util
+username='124640946'
+token=spotipy.util.prompt_for_user_token(username, scope=None, client_id=None, client_secret=None,redirect_uri=None)
+sp=spotipy.Spotify(auth=token)
+
+print client_secret ##

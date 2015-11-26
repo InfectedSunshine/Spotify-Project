@@ -1,0 +1,93 @@
+import sys
+import spotipy
+import spotipy.util as util
+scope = 'user-library-read'
+
+if len(sys.argv) > 2:
+    username = sys.argv[1]
+    other_user = sys.argv[2]
+else:
+    print "Usage: %s username" % (sys.argv[0],)
+    sys.exit()
+
+token = util.prompt_for_user_token(username, scope)
+user_list=[]
+print username
+if token:
+   # def gettrack(artist_name):
+       # response = sp.artist_top_tracks(alink)	#getting top track from artist
+      #  for track in response['tracks'][:1]:
+	#    print(track['name'])
+
+    sp = spotipy.Spotify(auth=token)
+    results = sp.current_user_saved_tracks()
+    artists = results['items']
+    #playlists = sp.user_playlist_create(username, 'Ultimate Playlist')
+    
+    
+    while results['next']:	#collecting all artists
+    	results = sp.next(results)
+    	artists.extend(results['items'])
+	
+    before_artist='null'
+   
+    for item in artists:	
+	track = item['track']
+	now_artist= track['artists'][0]['name']
+	alink = track['artists'][0]['uri']
+	if now_artist != before_artist:	#getting one artist only
+	    #print now_artist
+	    user_list.append(alink)
+	    before_artist = now_artist
+	else:
+		taco = 1	#temp fix
+
+#	print track['name'] + ' - ' + track['artists'][0]['name']
+	
+
+	
+else:
+    print "Can't get token for", username
+
+
+
+
+
+
+
+artist_list=[]
+def show_artist(results):
+    before_artist='null'
+    for i, item in enumerate(tracks['items']):
+        track = item['track']
+	now_artist= track['artists'][0]['uri']
+	#artist_list.extend(track['artists'][0]['uri'])
+	if now_artist != before_artist:	#getting one artist only
+	    artist_list.append(now_artist)
+	   
+	    #gettrack(alink)
+	    before_artist = now_artist
+	else:
+		taco = 1	#temp fix
+if __name__ == '__main__':
+    if token:
+        top = 40
+        sp = spotipy.Spotify(auth=token)
+        other_results = sp.user_playlists(other_user)
+        playlists= results['items']
+	while other_results['next']:	#collecting all artists
+    	    other_results = sp.next(results)
+    	    playlists.extend(results['items'])
+	
+	for playlist in playlists:
+            if playlist['owner']['id'] == username:
+                
+                stuff = sp.user_playlist(username, playlist['id'], fields="tracks,next")
+                other_tracks = stuff['tracks']
+                show_artist(other_tracks)
+		return artist_list
+    else:
+        print("Can't get token for", username)
+
+print artist_list & user_list
+
